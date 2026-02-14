@@ -1,0 +1,75 @@
+openapi: 3.0.3
+info:
+  title: Orders API
+  version: 1.0.0
+tags:
+  - name: Orders
+    description: Операции с заказами
+paths:
+  /api/order:
+    post:
+      summary: Create order
+      tags:
+        - Orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    CreateOrderRequest:
+      type: object
+      required: [ items ]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+
+    OrderItem:
+      type: object
+      required: [ productId, quantity ]
+      properties:
+        productId: { type: string, format: uuid }
+        quantity: { type: integer, minimum: 1 }
+
+    OrderResponse:
+      type: object
+      required: [ id ]
+      properties:
+        id: { type: string, format: uuid }
+
+    ErrorResponse:
+      type: object
+      required: [ message, code, timestamp ]
+      properties:
+        message:
+          type: string
+          example: "Order not found"
+        code:
+          type: string
+          example: "ORDER_NOT_FOUND"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-02-14T20:15:30Z"
+        details:
+          type: array
+          items:
+            type: string
+          example: [ "orderId must be UUID" ]
