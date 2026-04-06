@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: api-gateway
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
+    driver-class-name: org.postgresql.Driver
+    enabled: ${LIQUIBASE_ENABLED:true}
+  datasource:
+    url: jdbc:postgresql://localhost:5432/users_db
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  cloud:
+    openfeign:
+      client:
+        config:
+          inventory-client:
+            url: http://inventory-service:8083
+          order-client:
+            url: http://order-service:8081
+#            url: http://localhost:8081
+
+          notification-client:
+            url: http://notification-service:8082
+token:
+  jwt:
+    expiration: 3600000
+    salt: rNAWe6FZvpNArgaCAyt0099o+IdvTex1vNObQIN/7hw=
+  refresh:
+    expiration: 86400000
+app:
+  admin:
+    username: admin123
+    password: admin123
+springdoc:
+  swagger-ui:
+    persist-authorization: true
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} traceId=%X{traceId} %msg%n'
+server:
+  port: 8080

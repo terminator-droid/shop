@@ -5,13 +5,20 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.dudev</groupId>
     <artifactId>shop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <modules>
+        <module>common-lib</module>
+        <module>api-gateway</module>
+        <module>order-service</module>
+        <module>inventory-service</module>
+        <module>notification-service</module>
+    </modules>
     <name>shop</name>
     <description>shop</description>
     <url/>
@@ -21,9 +28,6 @@
     <developers>
         <developer/>
     </developers>
-    <modules>
-        <module>common-lib</module>
-    </modules>
     <scm>
         <connection/>
         <developerConnection/>
