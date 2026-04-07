@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: notification-service
+  liquibase:
+    enabled: true
+    change-log:
+      classpath:/db/changelog/db.changelog-master.yaml
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      enable-auto-commit: false
+      group-id: notification-service-1
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: com.dudev.kafka.*
+  datasource:
+    url: jdbc:postgresql://postgres:5432/${DB:orders-service-db}
+    username: "${DB_USERNAME:postgres}"
+    password: "${DB_PASSWORD:postgres}"
+    driver-class-name: org.postgresql.Driver
+token:
+  jwt:
+    salt: rNAWe6FZvpNArgaCAyt0099o+IdvTex1vNObQIN/7hw=
+api:
+  keys:
+    inventory-service: abc123def456ghi789jkl012mno345pqr
+    order-service: xyz789uvw123rst456opq789mno012klm
+    default-service: 1234
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} traceId=%X{traceId} %msg%n'
+server:
+  port: 8082

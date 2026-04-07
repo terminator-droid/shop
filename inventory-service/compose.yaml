@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - inventory-data-net
+  app:
+    container_name: inventory-service
+    build: .
+    ports:
+      - "8083:8083"
+      - "9090:9090"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - shared-net
+      - inventory-data-net
+
+networks:
+  shared-net:
+    external: true
+    name: my-shared-network
+  inventory-data-net:
+    internal: true
+volumes:
+  postgres_data:

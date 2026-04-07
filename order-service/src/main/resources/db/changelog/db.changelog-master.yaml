@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: 01.create-orders.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 02.create-orders-items.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: 03.create-retryable-tasks.yaml
+      relativeToChangelogFile: true

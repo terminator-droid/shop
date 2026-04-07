@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: Unified API Gateway
+  description: |
+    Единая точка входа для всех микросервисов через API Gateway.
+    Пользователи работают ТОЛЬКО через localhost:8080.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Development
+  - url: https://api.company.com
+    description: Production
+
+tags:
+  - name: Auth
+    description: Аутентификация и управление пользователями (Users API)
+  - name: Products
+    description: Продукты и инвентарь (Inventory Service)
+  - name: Orders
+    description: Создание заказов (Orders Service) + История заказов (Notification Service)
+
+paths:
+  # AUTH + USERS (users-api.yaml)
+  /auth/register:
+    $ref: "./users-api.yaml#/paths/~1auth~1register"
+  /auth/login:
+    $ref: "./users-api.yaml#/paths/~1auth~1login"
+  /auth/refresh:
+    $ref: "./users-api.yaml#/paths/~1auth~1refresh"
+
+  /users:
+    $ref: "./users-api.yaml#/paths/~1users"
+  /users/{id}:
+    $ref: "./users-api.yaml#/paths/~1users~1{id}"
+
+  # PRODUCTS (inventory-api.yaml)
+  /api/products:
+    $ref: "./inventory-api.yaml#/paths/~1api~1products"
+  /api/products/{productId}:
+    $ref: "./inventory-api.yaml#/paths/~1api~1products~1{productId}"
+
+  # ORDERS CREATE (orders-api.yaml)
+  /api/order:
+    $ref: "./orders-api.yaml#/paths/~1api~1order"
+
+  # NOTIFICATION ORDERS READ-ONLY (notification-service-api.yaml)
+  /api/orders:
+    $ref: "./notification-service-api.yaml#/paths/~1api~1orders"
+  /api/orders/{orderId}:
+    $ref: "./notification-service-api.yaml#/paths/~1api~1orders~1{orderId}"
+  /api/orders/user/{userId}:
+    $ref: "./notification-service-api.yaml#/paths/~1api~1orders~1user~1{userId}"
+
+components:
+  schemas:
+    # USERS API
+    RegisterRequest:
+      $ref: "./users-api.yaml#/components/schemas/RegisterRequest"
+    LoginRequest:
+      $ref: "./users-api.yaml#/components/schemas/LoginRequest"
+    RefreshTokenRequest:
+      $ref: "./users-api.yaml#/components/schemas/RefreshTokenRequest"
+    AuthTokensResponse:
+      $ref: "./users-api.yaml#/components/schemas/AuthTokensResponse"
+    UserResponse:
+      $ref: "./users-api.yaml#/components/schemas/UserResponse"
+    UserCreateRequest:
+      $ref: "./users-api.yaml#/components/schemas/UserCreateRequest"
+    UserUpdatePasswordRequest:
+      $ref: "./users-api.yaml#/components/schemas/UserUpdatePasswordRequest"
+    ErrorResponse:
+      $ref: "./users-api.yaml#/components/schemas/ErrorResponse"
+
+    # INVENTORY API
+    ProductDto:
+      $ref: "./inventory-api.yaml#/components/schemas/ProductDto"
+    CreateProductDto:
+      $ref: "./inventory-api.yaml#/components/schemas/CreateProductDto"
+
+    # ORDERS API (CREATE)
+    CreateOrderRequest:
+      $ref: "./orders-api.yaml#/components/schemas/CreateOrderRequest"
+    OrderResponse:
+      $ref: "./orders-api.yaml#/components/schemas/OrderResponse"
+    OrderItem:
+      $ref: "./orders-api.yaml#/components/schemas/OrderItem"
+
+    # NOTIFICATION API (READ-ONLY)
+    OrderDto:
+      $ref: "./notification-service-api.yaml#/components/schemas/OrderDto"
+    OrderItemDto:
+      $ref: "./notification-service-api.yaml#/components/schemas/OrderItemDto"

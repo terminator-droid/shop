@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: daniil
+      changes:
+        - createTable:
+            tableName: retryable_tasks
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  defaultValueComputed: gen_random_uuid()
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: payload
+                  type: jsonb
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: retry_time
+                  type: java.sql.types.timestamp_with_timezone
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar
+                  constraints:
+                    nullable: false

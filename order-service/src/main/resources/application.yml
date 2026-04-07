@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: order-service
+  liquibase:
+    enabled: true
+    change-log:
+      classpath:/db/changelog/db.changelog-master.yaml
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    template:
+      default-topic: order-created-events
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${DB:orders_service_db}
+    username: "${DB_USERNAME:postgres}"
+    password: "${DB_PASSWORD:postgres}"
+    driver-class-name: org.postgresql.Driver
+token:
+  jwt:
+    salt: rNAWe6FZvpNArgaCAyt0099o+IdvTex1vNObQIN/7hw=
+
+scheduler:
+  system-user-id: 99fa0f2b-d356-4530-888f-a09cb28fd663
+  system-username: system_user
+
+grpc.client.inventory:
+#  address: localhost
+  address: inventory-service
+  port: 9090
+  negotiationType: plaintext
+
+
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} traceId=%X{traceId} %msg%n'
+retryable-tasks:
+  timeout: 5
+  limit: 100
+server:
+  port: 8081
+api:
+  keys:
+    inventory-service: abc123def456ghi789jkl012mno345pqr
+    order-service: xyz789uvw123rst456opq789mno012klm
+    default-service: 1234

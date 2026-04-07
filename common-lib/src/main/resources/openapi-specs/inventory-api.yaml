@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: Inventory Service API
+  description: Управление продуктами в инвентаре
+  version: 1.0.0
+  contact:
+    name: Inventory Team
+    email: inventory@company.com
+
+paths:
+  /api/products:
+    get:
+      operationId: getProducts
+      summary: Получить все продукты
+      tags: [Products]
+      
+      responses:
+        '200':
+          description: Список продуктов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDto'
+        '401':
+          description: Не авторизован
+
+    post:
+      operationId: createProduct
+      summary: Создать новый продукт
+      tags: [Products]
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDto'
+      responses:
+        '200':
+          description: Продукт создан
+        '400':
+          description: Неверные данные
+        '401':
+          description: Не авторизован
+
+  /api/products/{productId}:
+    get:
+      operationId: getProduct
+      summary: Получить продукт по ID
+      tags: [Products]
+      
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Продукт найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        '404':
+          description: Продукт не найден
+        '401':
+          description: Не авторизован
+
+    delete:
+      operationId: deleteProduct
+      summary: Удалить продукт по ID
+      tags: [Products]
+      
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Продукт удален
+        '404':
+          description: Продукт не найден
+        '401':
+          description: Не авторизован
+
+components:
+  
+  schemas:
+    ProductDto:
+      type: object
+      required: [name, quantity, price]
+      properties:
+        id:
+          type: string
+          example: "6fa7d20d-c7ff-469f-8aca-af0005b77717"
+        name:
+          type: string
+          example: "iPhone 15 Pro"
+          minLength: 1
+          maxLength: 255
+        quantity:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 100
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 999.99
+        sale:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          example: 10
+      example:
+        id: "6fa7d20d-c7ff-469f-8aca-af0005b77717"
+        name: "iPhone 15 Pro"
+        quantity: 100
+        price: 999.99
+        sale: 10
+    CreateProductDto:
+      type: object
+      required: [ name, quantity, price ]
+      properties:
+        name:
+          type: string
+          example: "iPhone 15 Pro"
+          minLength: 1
+          maxLength: 255
+        quantity:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 100
+        price:
+          type: number
+          format: double
+          minimum: 0
+          example: 999.99
+        sale:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 100
+          example: 10
+      example:
+        name: "iPhone 15 Pro"
+        quantity: 100
+        price: 999.99
+        sale: 10

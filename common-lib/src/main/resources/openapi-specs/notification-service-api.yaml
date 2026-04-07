@@ -1,0 +1,145 @@
+openapi: 3.0.3
+info:
+  title: Notification Service API
+  description: API для чтения заказов (только GET)
+  version: 1.0.0
+
+paths:
+  /api/orders:
+    get:
+      operationId: findAll
+      summary: Получить все заказы
+      tags: [Orders]
+      
+      responses:
+        '200':
+          description: Список всех заказов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '401':
+          description: Не авторизован
+
+  /api/orders/{orderId}:
+    get:
+      operationId: findAllByOrderId
+      summary: Получить элементы заказа по ID
+      tags: [Orders]
+      
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID заказа
+      responses:
+        '200':
+          description: Элементы заказа
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderItemDto'
+        '404':
+          description: Заказ не найден
+        '401':
+          description: Не авторизован
+
+  /api/orders/user/{userId}:
+    get:
+      operationId: findAllByUserId
+      summary: Получить заказы пользователя
+      tags: [Orders]
+      
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: ID пользователя
+      responses:
+        '200':
+          description: Заказы пользователя
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        '401':
+          description: Не авторизован
+
+components:
+  
+  schemas:
+    OrderDto:
+      type: object
+      required: [id, userId, totalPrice, createdAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        userId:
+          type: string
+          format: uuid
+          example: "987fcdeb-1234-5678-9abc-def012345678"
+        orderItemDtos:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDto'
+        totalPrice:
+          type: number
+          format: double
+          example: 1599.95
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-03-18T19:02:00Z"
+      example:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+        userId: "987fcdeb-1234-5678-9abc-def012345678"
+        totalPrice: 1599.95
+        createdAt: "2026-03-18T19:02:00Z"
+        orderItemDtos:
+          - id: "11111111-2222-3333-4444-555555555555"
+            name: "iPhone 15 Pro"
+            quantity: 1
+            subtotal: 999.99
+
+    OrderItemDto:
+      type: object
+      required: [id, name, quantity, subtotal]
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "11111111-2222-3333-4444-555555555555"
+        name:
+          type: string
+          example: "iPhone 15 Pro"
+          minLength: 1
+          maxLength: 255
+        quantity:
+          type: integer
+          format: int32
+          minimum: 1
+          example: 1
+        subtotal:
+          type: number
+          format: double
+          minimum: 0
+          example: 999.99
+      example:
+        id: "11111111-2222-3333-4444-555555555555"
+        name: "iPhone 15 Pro"
+        quantity: 1
+        subtotal: 999.99
